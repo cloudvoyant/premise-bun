@@ -1,0 +1,37 @@
+---
+name: On Commit
+
+"on":
+  pull_request:
+    branches:
+      - master
+  push:
+    branches-ignore:
+      - master
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  verify:
+    name: Test, lint, and check formatting
+    runs-on: ubuntu-latest
+    if: >-
+      github.event_name == 'pull_request' ||
+      github.event.before != '0000000000000000000000000000000000000000'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+          persist-credentials: false
+
+      - name: Run on-commit flow
+        uses: cloudvoyant/premise@v0
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        with:
+          flow: on-commit
+          release: auto

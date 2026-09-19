@@ -1,65 +1,52 @@
 # premise-bun
 
-premise-bun is [add your project description here].
+A Bun template registry for [Premise](https://github.com/cloudvoyant/premise). Developers can generate one of five minimal TypeScript applications alongside Premise's native Go and Cargo templates.
 
-## Features
+## Templates
 
-- [List key features of your project]
+| Template | Kind | npm package | Description |
+| --- | --- | --- | --- |
+| `premise-commander-cli` | app | `premise-commander` | Minimal Commander CLI with one optional name argument. |
+| `premise-tanstack-start-app` | app | — | Minimal React application with TanStack Start server-side rendering. |
+| `premise-sveltekit-app` | app | — | Minimal SvelteKit application with adapter-auto server-side rendering. |
+| `premise-opentui-cli` | app | `premise-opentui` | Minimal OpenTUI terminal counter with explicit renderer cleanup. |
+| `premise-hono-api` | app | — | Minimal Hono REST API with health and greeting routes. |
+
+Every template is a standalone Bun project. Bun, ESLint, and Prettier configuration has one canonical copy at the `templates/` root. Premise copies those shared files into each generated project before applying the selected template overlay, whose package manifest and task definitions keep the complete Premise contract.
 
 ## Requirements
 
-- bash 3.2+
-- [mise](https://mise.jdx.dev/getting-started.html)
+- `pm` on `PATH` to list, generate, and validate templates.
+- [Mise](https://mise.jdx.dev/) to install the declared Bun and Node toolchains.
+- Network access to install npm dependencies.
 
-Run `mise install` to install all tools, then `mise run install` for any additional dependencies.
-
-## Quick Start
-
-```bash
-git clone <your-repo>
-cd premise-bun
-mise install
-```
-
-Type `mise tasks` to see all available tasks:
+## Generate a Project
 
 ```bash
-❯ mise tasks
-build        Build the project
-clean        Clean build artifacts
-install      Install dependencies
-publish      Publish package to registry
-run          Run project locally
-test         Run tests
-...
+pm generate cloudvoyant/premise-bun
 ```
 
-Build, run, and test with `mise run`:
+Select a template, then enter a lowercase npm-safe project name. To skip the picker, use a fully qualified selector:
 
 ```bash
-mise run run
-mise run test
+pm generate cloudvoyant/premise-bun:premise-hono-api
 ```
 
-Task dependencies run automatically — `mise run test` runs `build` first!
+## Published CLIs
 
-Commit using conventional commits (`feat:`, `fix:`, `docs:`). Merge/push to main and CI/CD will run automatically bumping your project version and publishing a package.
+The Commander and OpenTUI starters are also public npm executables:
 
-## Documentation
+```bash
+bunx premise-commander Premise
+bunx premise-opentui
+```
 
-- [User Guide](docs/user-guide.md) - Complete setup and usage guide
-- [Architecture](docs/architecture.md) - Design and implementation details
-- [Infrastructure](docs/infrastructure.md) - Infrastructure and CI/CD details
+Feature-branch pushes whose commit message contains `[publish-rc]` publish both packages with an `rc` dist-tag. Merges to `master` validate the registry, publish stable versions with the `latest` dist-tag, and create the matching `vMAJOR.MINOR.PATCH` tag.
 
-## References
+## Development
 
-- [mise - dev tool manager](https://mise.jdx.dev/)
-- [semantic-release](https://semantic-release.gitbook.io/)
-- [bats-core bash testing](https://bats-core.readthedocs.io/)
-- [Google Shell Style Guide](https://google.github.io/styleguide/shellguide.html)
-- [Conventional Commits](https://www.conventionalcommits.org/)
-- [GitHub Actions](https://docs.github.com/en/actions)
+See the [development guide](docs/development-guide.md) for local validation and publication details. See [architecture](docs/architecture.md) for the registry layout.
 
----
+## License
 
-**Template**: mise-lib-template v2.15.0
+[MIT](LICENSE)
