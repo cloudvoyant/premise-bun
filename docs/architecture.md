@@ -9,21 +9,21 @@
 ```text
 premise.yaml             # Registry identity and template declarations
 mise.toml                # Registry-level checks; not a Bun monorepo root
-templates/package.json   # Private Bun validation workspace and ESLint dependencies
+templates/package.json   # Private workspace and shared lint/format dependencies
 templates/mise.toml      # Shared Bun tools and aggregate checks
 templates/bunfig.toml    # Retained hoisted-linker policy
 templates/eslint.config.js # Shared registry lint policy
 templates/.prettier*     # Shared formatting policy and ignores
-templates/premise-*/     # Standalone generated-project overlays
+templates/premise-*/     # Template-specific generated-project overlays
 README.md                # Template catalog and generation entry points
 docs/                    # Registry development documentation
 ```
 
-The repository root stays outside the nested Bun monorepo. `templates/mise.toml` declares `monorepo_root = true` and discovers `premise-*` package configurations. The useful Bun template tooling is moved into this boundary instead of being deleted: Bun controls workspace installation, ESLint performs aggregate source linting, and Prettier defines the formatting policy copied into generated projects. This follows the separation proven by `premise-cargo` and prevents registry tasks from being treated as package tasks.
+The repository root stays outside the nested Bun monorepo. `templates/mise.toml` declares `monorepo_root = true` and discovers `premise-*` package configurations. The useful Bun template tooling is moved into this boundary instead of being deleted: Bun controls workspace installation, ESLint performs aggregate source linting, and Prettier defines the formatting policy. Premise copies files directly under `templates/` into a generated project before the selected template overlay, so these policies have one canonical source copy. This follows the separation proven by `premise-cargo` and prevents registry tasks from being treated as package tasks.
 
 ## Template Contract
 
-All five entries use Premise schema `0.1` and `kind: app`, so generated projects land under `apps/<name>`. Each template owns its dependencies, copied `bunfig.toml` and Prettier policy, Bun tool version, source files, tests, and every task required by `core.ContractTasks("app")` in Premise. ESLint remains an aggregate registry check; standalone template lint tasks continue to use their local TypeScript or framework checker.
+All five entries use Premise schema `0.1` and `kind: app`, so generated projects land under `apps/<name>`. Shared `bunfig.toml`, ESLint, and Prettier files live once at the `templates/` root. Each template overlay owns its dependencies, Bun tool version, source files, tests, and every task required by `core.ContractTasks("app")` in Premise. ESLint remains an aggregate registry check; standalone template lint tasks continue to use their local TypeScript or framework checker.
 
 `PREMISE_TEMPLATE_TEST=1` changes interactive `run` and `dev` tasks into finite build checks. It also changes publication into `npm pack --dry-run`, so contract tests never publish. Commander and OpenTUI publish release candidates from marked feature-branch pushes and stable packages after merges to `master`; the other three templates keep explicit publication no-ops.
 

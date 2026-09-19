@@ -9,6 +9,7 @@ build/
 **/build/
 coverage/
 **/coverage/
+**/routeTree.gen.ts
 bun.lock
 **/bun.lock
 CHANGELOG.md

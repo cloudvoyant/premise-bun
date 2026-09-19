@@ -52,11 +52,11 @@ fi
 '''
 
 [tasks.format]
-description = "Format every template"
+description = "Format every template with the shared Prettier policy"
 depends = ["install"]
-run = "bun run --filter '*' format"
+run = "bun run format"
 
 [tasks."format:check"]
-description = "Check every template format"
+description = "Check every template with the shared Prettier policy"
 depends = ["install"]
-run = "bun run --filter '*' format:check"
+run = "bun run format:check"

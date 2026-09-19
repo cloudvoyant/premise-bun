@@ -11,13 +11,15 @@
     "test": "bun run --filter '*' test",
     "lint": "eslint premise-* --no-warn-ignored && bun run --filter '*' lint",
     "lint:fix": "eslint premise-* --fix --no-warn-ignored && bun run --filter '*' lint:fix",
-    "format": "bun run --filter '*' format",
-    "format:check": "bun run --filter '*' format:check"
+    "format": "prettier --plugin=prettier-plugin-svelte --ignore-path .prettierignore --write premise-*",
+    "format:check": "prettier --plugin=prettier-plugin-svelte --ignore-path .prettierignore --check premise-*"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
     "eslint": "10.11.0",
     "globals": "17.12.0",
+    "prettier": "3.9.8",
+    "prettier-plugin-svelte": "4.1.1",
     "typescript": "6.0.3",
     "typescript-eslint": "8.70.0"
   }
