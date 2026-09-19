@@ -51,7 +51,7 @@ Remote selectors always use a repository's default branch. Use an absolute local
 
 ## Publishing
 
-The public npm package names are `premise-commander` and `premise-opentui`. Their template-level `publish:rc` and `publish` tasks require `PREMISE_PUBLISH_VERSION` outside contract-test mode. They build the CLI, update the package version temporarily, skip versions already present on npm, publish with provenance, and restore the source manifest.
+The public npm package names are `premise-commander` and `premise-opentui`. Their template-level `publish:rc` and `publish` tasks require `PREMISE_PUBLISH_VERSION` outside contract-test mode. They build the CLI, update the package version temporarily, skip versions already present on npm, treat npm's immutable-version conflict as an idempotent skip during registry propagation, publish with provenance, and restore the source manifest.
 
 Feature-branch pushes publish only when the HEAD commit contains `[publish-rc]`. The root task computes `0.x.y-rc.<GitHub run number>` with svu and publishes both packages with the `rc` dist-tag. A merge to `master` runs the full registry validation, publishes both stable packages with `latest`, and pushes the corresponding version tag. Each workflow uses the Premise `v0` action; Mise installs Node, Bun, and release tools declared by the repository. GitHub Actions passes the Cloudvoyant `NPM_TOKEN` secret only to that lifecycle action.
 
