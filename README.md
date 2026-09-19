@@ -17,7 +17,7 @@ Every template is a standalone Bun project. Bun, ESLint, and Prettier configurat
 ## Requirements
 
 - `pm` on `PATH` to list, generate, and validate templates.
-- [Mise](https://mise.jdx.dev/) to install Bun 1.4.2.
+- [Mise](https://mise.jdx.dev/) to install the declared Bun and Node toolchains.
 - Network access to install npm dependencies.
 
 ## Generate a Project

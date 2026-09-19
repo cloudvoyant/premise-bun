@@ -2,6 +2,7 @@
 # Shared Bun tooling and aggregate package tasks live under templates/.
 
 [tools]
+node = "24"
 svu = "3"
 
 [tasks."on-merge"]
@@ -12,12 +13,20 @@ mise run format:check
 mise run lint
 mise run build
 mise run test
+mise run publish
 '''
 
 [tasks."publish:rc"]
 description = "Publish Commander and OpenTUI release candidates"
 run = '''
 set -eu
+if [ -n "${NODE_AUTH_TOKEN:-}" ]; then
+  npmrc="$(mktemp)"
+  trap 'rm -f "$npmrc"' EXIT
+  printf '%s\n' '//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}' > "$npmrc"
+  chmod 600 "$npmrc"
+  export NPM_CONFIG_USERCONFIG="$npmrc"
+fi
 npm whoami >/dev/null
 base_tag="$(svu next --tag.pattern 'v*')"
 base_version="${base_tag#v}"
@@ -33,6 +42,13 @@ echo "published CLI release candidates at $version"
 description = "Publish stable Commander and OpenTUI packages"
 run = '''
 set -eu
+if [ -n "${NODE_AUTH_TOKEN:-}" ]; then
+  npmrc="$(mktemp)"
+  trap 'rm -f "$npmrc"' EXIT
+  printf '%s\n' '//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}' > "$npmrc"
+  chmod 600 "$npmrc"
+  export NPM_CONFIG_USERCONFIG="$npmrc"
+fi
 npm whoami >/dev/null
 tag="$(svu next --tag.pattern 'v*')"
 version="${tag#v}"

@@ -28,22 +28,11 @@ jobs:
           fetch-tags: true
           persist-credentials: false
 
-      - name: Set up npm
-        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
-        with:
-          node-version: 24
-          registry-url: https://registry.npmjs.org
-
+      # Merge blocker: repin this action to the final merged Premise commit.
       - name: Run on-commit flow
-        uses: cloudvoyant/premise@fa3476c51a0711c6308a3c96045e407d1248406e # v0
-        with:
-          flow: on-commit
-          release: none
-
-      - name: Publish release candidates
-        if: >-
-          github.event_name == 'push' &&
-          contains(github.event.head_commit.message, '[publish-rc]')
+        uses: cloudvoyant/premise@07d50cea0c6eb86d73ea742d49855a57e09bafef
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: mise run publish:rc
+        with:
+          flow: on-commit
+          release: auto
