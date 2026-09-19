@@ -79,4 +79,4 @@ run = 'echo "deploy: no deployment target configured"'
 
 [tasks.e2e]
 description = "Run the finite application smoke test"
-run = "bun run test"
+run = "sh -c 'bun run test'"
