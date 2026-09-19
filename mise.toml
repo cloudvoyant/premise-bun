@@ -60,8 +60,9 @@ if git rev-parse --quiet --verify "refs/tags/$tag" >/dev/null; then
 elif [ "${GITHUB_ACTIONS:-}" = "true" ]; then
   : "${GITHUB_REPOSITORY:?GITHUB_REPOSITORY is required}"
   : "${GITHUB_SHA:?GITHUB_SHA is required}"
-  : "${GH_TOKEN:?GH_TOKEN is required}"
-  gh api "repos/$GITHUB_REPOSITORY/git/refs" \
+  github_token="${PREMISE_GITHUB_TOKEN:-${GH_TOKEN:-${GITHUB_TOKEN:-}}}"
+  : "${github_token:?PREMISE_GITHUB_TOKEN, GH_TOKEN, or GITHUB_TOKEN is required}"
+  GH_TOKEN="$github_token" gh api "repos/$GITHUB_REPOSITORY/git/refs" \
     --method POST \
     --field "ref=refs/tags/$tag" \
     --field "sha=$GITHUB_SHA" >/dev/null

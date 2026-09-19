@@ -30,7 +30,7 @@ jobs:
       - name: Run on-merge flow
         uses: cloudvoyant/premise@v0
         env:
-          GH_TOKEN: ${{ github.token }}
+          PREMISE_GITHUB_TOKEN: ${{ github.token }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         with:
           flow: on-merge
