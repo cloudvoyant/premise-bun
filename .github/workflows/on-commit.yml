@@ -1,0 +1,49 @@
+---
+name: On Commit
+
+"on":
+  pull_request:
+    branches:
+      - master
+  push:
+    branches-ignore:
+      - master
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  verify:
+    name: Test, lint, and check formatting
+    runs-on: ubuntu-latest
+    if: >-
+      github.event_name == 'pull_request' ||
+      github.event.before != '0000000000000000000000000000000000000000'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+          persist-credentials: false
+
+      - name: Set up npm
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+
+      - name: Run on-commit flow
+        uses: cloudvoyant/premise@fa3476c51a0711c6308a3c96045e407d1248406e # v0
+        with:
+          flow: on-commit
+          release: none
+
+      - name: Publish release candidates
+        if: >-
+          github.event_name == 'push' &&
+          contains(github.event.head_commit.message, '[publish-rc]')
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: mise run publish:rc

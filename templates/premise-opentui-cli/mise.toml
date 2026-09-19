@@ -1,5 +1,6 @@
 [tools]
 bun = "1.4.2"
+node = "24"
 
 [tasks.install]
 description = "Install Bun dependencies"
@@ -44,12 +45,58 @@ description = "Pull external environment configuration"
 run = 'echo "env-pull: nothing to pull"'
 
 [tasks."publish:rc"]
-description = "Report deferred prerelease publication"
-run = 'echo "publish:rc: npm publication is not configured"'
+description = "Publish a release candidate to npm"
+depends = ["build"]
+run = '''
+set -eu
+if [ "${PREMISE_TEMPLATE_TEST:-}" = "1" ]; then
+  echo "publish:rc (test mode): npm pack --dry-run"
+  npm pack --dry-run
+  exit 0
+fi
+version="${PREMISE_PUBLISH_VERSION:?PREMISE_PUBLISH_VERSION is required}"
+if ! printf '%s\n' "$version" | grep -Eq '^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)-(0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*)(\.(0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*))*$'; then
+  echo "error: publish:rc requires a SemVer prerelease version (got $version)" >&2
+  exit 1
+fi
+backup="$(mktemp)"
+cp package.json "$backup"
+trap 'cp "$backup" package.json; rm -f "$backup"' EXIT
+npm pkg set "version=$version"
+name="$(npm pkg get name | tr -d '\"')"
+if npm view "$name@$version" version >/dev/null 2>&1; then
+  echo "skip: $name@$version already published"
+else
+  npm publish --access public --tag rc --provenance
+fi
+'''
 
 [tasks.publish]
-description = "Report deferred stable publication"
-run = 'echo "publish: npm publication is not configured"'
+description = "Publish a stable version to npm"
+depends = ["build"]
+run = '''
+set -eu
+if [ "${PREMISE_TEMPLATE_TEST:-}" = "1" ]; then
+  echo "publish (test mode): npm pack --dry-run"
+  npm pack --dry-run
+  exit 0
+fi
+version="${PREMISE_PUBLISH_VERSION:?PREMISE_PUBLISH_VERSION is required}"
+if ! printf '%s\n' "$version" | grep -Eq '^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$'; then
+  echo "error: publish requires a stable SemVer version (got $version)" >&2
+  exit 1
+fi
+backup="$(mktemp)"
+cp package.json "$backup"
+trap 'cp "$backup" package.json; rm -f "$backup"' EXIT
+npm pkg set "version=$version"
+name="$(npm pkg get name | tr -d '\"')"
+if npm view "$name@$version" version >/dev/null 2>&1; then
+  echo "skip: $name@$version already published"
+else
+  npm publish --access public --tag latest --provenance
+fi
+'''
 
 [tasks.run]
 description = "Run the application"

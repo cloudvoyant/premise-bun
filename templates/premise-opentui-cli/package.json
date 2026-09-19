@@ -1,11 +1,32 @@
 {
-  "name": "premise-opentui-cli",
+  "name": "premise-opentui",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
+  "description": "A minimal Bun terminal UI starter built with OpenTUI",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cloudvoyant/premise-bun.git"
+  },
   "type": "module",
   "packageManager": "bun@1.4.2",
+  "engines": {
+    "bun": ">=1.4.2"
+  },
+  "bin": {
+    "premise-opentui": "./dist/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
   "scripts": {
-    "build": "bun build src/index.ts --outdir dist --target bun --external '@opentui/core-*'",
+    "build": "bun build src/index.ts --outdir dist --target bun --external=@opentui/core-*",
     "clean": "rm -rf dist coverage",
     "test": "bun test",
     "lint": "tsc --noEmit",

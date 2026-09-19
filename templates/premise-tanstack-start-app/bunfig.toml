@@ -2,3 +2,4 @@
 # Hoist dependencies to the root node_modules so repo-level config files
 # (eslint.config.js, .prettierrc) and mise task PATHs resolve uniformly.
 linker = "hoisted"
+minimumReleaseAge = 604800

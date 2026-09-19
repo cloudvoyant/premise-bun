@@ -40,7 +40,8 @@ mise.toml                # Registry development tasks
 2. Run `mise run format` inside that template.
 3. Run `mise run format:check`, `mise run lint`, `mise run test`, and `mise run build` inside that template.
 4. Run the registry-wide `mise run test` from the repository root with the companion Premise binary on `PATH`.
-5. Generate the edited template through a local selector and inspect the standalone result.
+5. For Commander or OpenTUI changes, run `npm pack --dry-run` in the template and inspect the package contents.
+6. Generate the edited template through a local selector and inspect the standalone result.
 
 ```bash
 pm generate "$PWD":premise-hono-api
@@ -48,6 +49,12 @@ pm generate "$PWD":premise-hono-api
 
 Remote selectors always use a repository's default branch. Use an absolute local source while this feature is unmerged.
 
+## Publishing
+
+The public npm package names are `premise-commander` and `premise-opentui`. Their template-level `publish:rc` and `publish` tasks require `PREMISE_PUBLISH_VERSION` outside contract-test mode. They build the CLI, update the package version temporarily, skip versions already present on npm, publish with provenance, and restore the source manifest.
+
+Feature-branch pushes publish only when the HEAD commit contains `[publish-rc]`. The root task computes `0.x.y-rc.<GitHub run number>` with svu and publishes both packages with the `rc` dist-tag. A merge to `master` runs the full registry validation, publishes both stable packages with `latest`, and pushes the corresponding version tag. GitHub Actions reads npm credentials from the Cloudvoyant `NPM_TOKEN` secret.
+
 ## Deferred Infrastructure
 
-This repository does not yet contain CI workflows, deployment configuration, npm publication, release credentials, or artifact packaging. Add those only through a separate infrastructure effort after the five template contracts are stable.
+Deployment configuration, publication for TanStack Start, SvelteKit, and Hono, and standalone binary artifacts remain deferred.

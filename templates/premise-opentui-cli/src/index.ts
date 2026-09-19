@@ -1,5 +1,7 @@
+#!/usr/bin/env bun
+
 import { BoxRenderable, TextRenderable, createCliRenderer } from '@opentui/core'
-import { counterLabel, updateCount, type CounterKey } from './counter'
+import { counterLabel, updateCount, type CounterKey } from './counter.js'
 
 const renderer = await createCliRenderer({
   exitOnCtrlC: true,

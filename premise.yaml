@@ -17,7 +17,7 @@ templates:
         type: string
         populate: name
     substitutions:
-      premise-commander-cli: name
+      premise-commander: name
   - name: premise-tanstack-start-app
     kind: app
     questions:
@@ -41,7 +41,7 @@ templates:
         type: string
         populate: name
     substitutions:
-      premise-opentui-cli: name
+      premise-opentui: name
   - name: premise-hono-api
     kind: app
     questions:
