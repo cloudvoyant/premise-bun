@@ -1,5 +1,0 @@
----
-tag:
-  pattern: "v*"
-  prefix: "v"
-  mode: all

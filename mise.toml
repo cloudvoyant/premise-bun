@@ -19,7 +19,7 @@ description = "Publish Commander and OpenTUI release candidates"
 run = '''
 set -eu
 npm whoami >/dev/null
-base_tag="$(svu next)"
+base_tag="$(svu next --tag.pattern 'v*')"
 base_version="${base_tag#v}"
 identifier="${GITHUB_RUN_NUMBER:-$(date -u +%Y%m%d%H%M%S)}"
 version="${base_version}-rc.${identifier}"
@@ -34,7 +34,7 @@ description = "Publish stable Commander and OpenTUI packages"
 run = '''
 set -eu
 npm whoami >/dev/null
-tag="$(svu next)"
+tag="$(svu next --tag.pattern 'v*')"
 version="${tag#v}"
 for package in premise-commander-cli premise-opentui-cli; do
   (cd "templates/$package" && PREMISE_PUBLISH_VERSION="$version" mise run publish)
@@ -64,7 +64,7 @@ run = "pm template test"
 description = "Validate registry structure"
 run = '''
 set -eu
-for file in premise.yaml .svu.yml .github/workflows/on-commit.yml .github/workflows/on-merge.yml templates/mise.toml templates/package.json templates/bunfig.toml templates/eslint.config.js templates/.prettierrc templates/.prettierignore; do
+for file in premise.yaml .github/workflows/on-commit.yml .github/workflows/on-merge.yml templates/mise.toml templates/package.json templates/bunfig.toml templates/eslint.config.js templates/.prettierrc templates/.prettierignore; do
   [ -f "$file" ] || { echo "error: missing $file" >&2; exit 1; }
 done
 echo "registry structure valid"
