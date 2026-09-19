@@ -67,7 +67,22 @@ name="$(npm pkg get name | tr -d '\"')"
 if npm view "$name@$version" version >/dev/null 2>&1; then
   echo "skip: $name@$version already published"
 else
-  npm publish --access public --tag rc --provenance
+  publish_log="$(mktemp)"
+  if npm publish --access public --tag rc --provenance >"$publish_log" 2>&1; then
+    status=0
+  else
+    status=$?
+  fi
+  cat "$publish_log"
+  if [ "$status" -ne 0 ]; then
+    if grep -Eqi 'previously published versions|cannot publish over' "$publish_log"; then
+      echo "skip: $name@$version was already published"
+    else
+      rm -f "$publish_log"
+      exit "$status"
+    fi
+  fi
+  rm -f "$publish_log"
 fi
 '''
 
@@ -94,7 +109,22 @@ name="$(npm pkg get name | tr -d '\"')"
 if npm view "$name@$version" version >/dev/null 2>&1; then
   echo "skip: $name@$version already published"
 else
-  npm publish --access public --tag latest --provenance
+  publish_log="$(mktemp)"
+  if npm publish --access public --tag latest --provenance >"$publish_log" 2>&1; then
+    status=0
+  else
+    status=$?
+  fi
+  cat "$publish_log"
+  if [ "$status" -ne 0 ]; then
+    if grep -Eqi 'previously published versions|cannot publish over' "$publish_log"; then
+      echo "skip: $name@$version was already published"
+    else
+      rm -f "$publish_log"
+      exit "$status"
+    fi
+  fi
+  rm -f "$publish_log"
 fi
 '''
 
