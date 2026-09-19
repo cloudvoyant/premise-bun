@@ -21,15 +21,14 @@ jobs:
     if: github.event.before != '0000000000000000000000000000000000000000'
     steps:
       - name: Checkout code
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
           fetch-tags: true
           persist-credentials: false
 
-      # Merge blocker: repin this action to the final merged Premise commit.
       - name: Run on-merge flow
-        uses: cloudvoyant/premise@07d50cea0c6eb86d73ea742d49855a57e09bafef
+        uses: cloudvoyant/premise@v0
         env:
           GH_TOKEN: ${{ github.token }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

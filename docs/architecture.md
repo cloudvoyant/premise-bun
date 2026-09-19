@@ -33,7 +33,7 @@ Premise registers `cloudvoyant/premise-bun` in its ordered `OfficialSources` lis
 
 ## Publication
 
-Each workflow delegates its complete lifecycle to one pinned Premise action. Mise installs the declared Node, Bun, and release tools without separate setup actions. A feature-branch push marked `[publish-rc]` invokes the root `publish:rc` task, which gives both CLI packages the same `0.x.y-rc.<run>` version and publishes the `rc` dist-tag. `on-merge.yml` runs the root `on-merge` task, which validates the registry, publishes both stable packages with `latest`, and pushes the matching semantic-version tag. Reruns skip package versions that already exist.
+Each workflow delegates its complete lifecycle to the major-versioned Premise action. Mise installs the declared Node, Bun, and release tools without separate setup actions. A feature-branch push marked `[publish-rc]` invokes the root `publish:rc` task, which gives both CLI packages the same `0.x.y-rc.<run>` version and publishes the `rc` dist-tag. `on-merge.yml` runs the root `on-merge` task, which validates the registry, publishes both stable packages with `latest`, and pushes the matching semantic-version tag. Reruns skip package versions that already exist.
 
 The workflows authenticate with the Cloudvoyant `NPM_TOKEN` Actions secret. Package manifests remain unscoped: `premise-commander` and `premise-opentui`.
 
