@@ -7,7 +7,7 @@ svu = "3"
 [tasks."on-merge"]
 description = "Validate the registry before stable publication"
 run = '''
-set -euo pipefail
+set -eu
 mise run format:check
 mise run lint
 mise run build
@@ -17,7 +17,7 @@ mise run test
 [tasks."publish:rc"]
 description = "Publish Commander and OpenTUI release candidates"
 run = '''
-set -euo pipefail
+set -eu
 npm whoami >/dev/null
 base_tag="$(svu next)"
 base_version="${base_tag#v}"
@@ -32,7 +32,7 @@ echo "published CLI release candidates at $version"
 [tasks.publish]
 description = "Publish stable Commander and OpenTUI packages"
 run = '''
-set -euo pipefail
+set -eu
 npm whoami >/dev/null
 tag="$(svu next)"
 version="${tag#v}"
