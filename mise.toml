@@ -1,32 +1,45 @@
-# =============================================================================
-# mise.toml - bun (TypeScript) template
-# Overlays the base mise.toml during scaffold. Tasks are file tasks under
-# mise-tasks/ (this template overrides only the tasks that differ from base).
-# =============================================================================
+# The repository root is a Premise template registry, not a Bun monorepo.
+# Shared Bun tooling and aggregate package tasks live under templates/.
 
-# Enable mise monorepo mode: root task addressing + per-package mise.toml files.
-monorepo_root = true
+[tasks."template-test"]
+description = "Run every declared template through the Premise contract"
+run = "pm template test"
 
-[monorepo]
-# Each package directory may carry its own mise.toml (tools, env, tasks);
-# tasks are addressed as //packages/<name>:<task> from the repo root.
-config_roots = ["packages/*"]
+[tasks.build]
+description = "Validate registry structure"
+run = '''
+set -eu
+for file in premise.yaml templates/mise.toml templates/package.json templates/bunfig.toml templates/eslint.config.js templates/.prettierrc templates/.prettierignore; do
+  [ -f "$file" ] || { echo "error: missing $file" >&2; exit 1; }
+done
+echo "registry structure valid"
+'''
 
-[env]
-_.path   = ['{{config_root}}/node_modules/.bin']
-PROJECT  = "premise-bun"
-TEMPLATE         = "mise-bun-template"
-VERSION  = "{{exec(command='cat version.txt 2>/dev/null || echo 0.1.0')}}"
+[tasks.test]
+description = "Run the registry contract for every declared template"
+run = "mise run template-test"
 
-[tools]
-# bun provides its own Node-compatible runtime; no separate node/pnpm tool needed.
-bun        = "1"
-bats       = "latest"
-shellcheck = "latest"
-shfmt      = "latest"
+[tasks.format]
+description = "Format registry Mise configuration"
+run = "mise fmt"
 
-[task_config]
-includes = ["mise-tasks"]
+[tasks."format:check"]
+description = "Check registry Mise configuration formatting"
+run = "mise fmt --check"
 
-[settings]
-experimental = true
+[tasks.lint]
+description = "Validate registry configuration"
+run = '''
+set -eu
+mise fmt --check
+[ -f premise.yaml ] || { echo "error: missing premise.yaml" >&2; exit 1; }
+(cd templates && mise run lint)
+echo "registry config valid"
+'''
+
+[tasks.clean]
+description = "Remove generated Bun artifacts"
+run = '''
+find templates -type d \( -name node_modules -o -name dist -o -name .output -o -name .svelte-kit -o -name build -o -name coverage \) -prune -exec rm -rf {} +
+find templates -name bun.lock -type f -delete
+'''

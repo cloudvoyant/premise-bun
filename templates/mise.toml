@@ -1,0 +1,62 @@
+# Shared Bun environment for validating every source template. Generated
+# projects remain standalone because each template also declares Bun itself.
+
+monorepo_root = true
+
+[monorepo]
+config_roots = ["premise-*"]
+
+[tools]
+bun = "1.4.2"
+
+[tasks.install]
+description = "Install every template dependency"
+run = "bun install"
+
+[tasks.build]
+description = "Build every template"
+depends = ["install"]
+run = "bun run --filter '*' build"
+
+[tasks.clean]
+description = "Remove every template build artifact"
+run = '''
+find . -type d \( -name dist -o -name .output -o -name .svelte-kit -o -name build -o -name coverage \) -prune -exec rm -rf {} +
+'''
+
+[tasks.test]
+description = "Run every template test"
+depends = ["install"]
+run = "bun run --filter '*' test"
+
+[tasks.lint]
+description = "Lint and type-check every template"
+depends = ["install"]
+run = '''
+if [ -d premise-commander-cli ]; then
+  bun run lint
+else
+  echo "template lint skipped: no templates created yet"
+fi
+'''
+
+[tasks."lint:fix"]
+description = "Fix lint issues, format, and type-check every template"
+depends = ["install"]
+run = '''
+if [ -d premise-commander-cli ]; then
+  bun run lint:fix
+else
+  echo "template lint:fix skipped: no templates created yet"
+fi
+'''
+
+[tasks.format]
+description = "Format every template"
+depends = ["install"]
+run = "bun run --filter '*' format"
+
+[tasks."format:check"]
+description = "Check every template format"
+depends = ["install"]
+run = "bun run --filter '*' format:check"

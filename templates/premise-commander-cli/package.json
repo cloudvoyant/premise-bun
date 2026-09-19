@@ -1,0 +1,26 @@
+{
+  "name": "premise-commander-cli",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "bun@1.4.2",
+  "scripts": {
+    "build": "bun build src/index.ts --outdir dist --target bun",
+    "clean": "rm -rf dist coverage",
+    "test": "bun test",
+    "lint": "tsc --noEmit",
+    "lint:fix": "bun run format && bun run lint",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "dev": "bun --watch src/index.ts",
+    "start": "bun src/index.ts"
+  },
+  "dependencies": {
+    "commander": "15.0.0"
+  },
+  "devDependencies": {
+    "@types/bun": "1.4.2",
+    "prettier": "3.9.8",
+    "typescript": "7.0.2"
+  }
+}
