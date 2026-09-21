@@ -1,7 +1,14 @@
-# The repository root is a Premise template registry, not a Bun monorepo.
-# Shared Bun tooling and aggregate package tasks live under templates/.
+# The repository root owns registry development and the Bun workspace used by
+# source templates. Generated clients receive only the files declared in
+# premise.yaml under template_registry.workspace_files.
+
+monorepo_root = true
+
+[monorepo]
+config_roots = ["templates/premise-*", "apps/*", "libs/*"]
 
 [tools]
+bun = "1.4.2"
 node = "24"
 svu = "3"
 
@@ -81,7 +88,7 @@ run = "pm template test"
 description = "Validate registry structure"
 run = '''
 set -eu
-for file in premise.yaml .github/workflows/on-commit.yml .github/workflows/on-merge.yml templates/mise.toml templates/package.json templates/bunfig.toml templates/eslint.config.js templates/.prettierrc templates/.prettierignore; do
+for file in premise.yaml package.json bunfig.toml eslint.config.js .prettierrc .prettierignore .github/workflows/on-commit.yml .github/workflows/on-merge.yml; do
   [ -f "$file" ] || { echo "error: missing $file" >&2; exit 1; }
 done
 echo "registry structure valid"
@@ -92,12 +99,18 @@ description = "Run the registry contract for every declared template"
 run = "mise run template-test"
 
 [tasks.format]
-description = "Format registry Mise configuration"
-run = "mise fmt"
+description = "Format registry and template files"
+run = '''
+mise fmt
+bun run format
+'''
 
 [tasks."format:check"]
-description = "Check registry Mise configuration formatting"
-run = "mise fmt --check"
+description = "Check registry and template formatting"
+run = '''
+mise fmt --check
+bun run format:check
+'''
 
 [tasks.lint]
 description = "Validate registry configuration"
@@ -105,13 +118,13 @@ run = '''
 set -eu
 mise fmt --check
 [ -f premise.yaml ] || { echo "error: missing premise.yaml" >&2; exit 1; }
-(cd templates && mise run lint)
+bun run lint
 echo "registry config valid"
 '''
 
 [tasks.clean]
 description = "Remove generated Bun artifacts"
 run = '''
-find templates -type d \( -name node_modules -o -name dist -o -name .output -o -name .svelte-kit -o -name build -o -name coverage \) -prune -exec rm -rf {} +
-find templates -name bun.lock -type f -delete
+find templates apps libs -type d \( -name node_modules -o -name dist -o -name .output -o -name .svelte-kit -o -name build -o -name coverage \) -prune -exec rm -rf {} + 2>/dev/null || true
+find templates apps libs -name bun.lock -type f -delete 2>/dev/null || true
 '''

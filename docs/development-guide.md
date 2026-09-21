@@ -24,19 +24,18 @@ The root test invokes `pm template test`. Premise enters every declared template
 ## Project Structure
 
 ```text
-premise.yaml             # Template-registry manifest
-templates/mise.toml      # Shared source and client monorepo tasks
-templates/package.json   # Shared client workspace and lint/format dependencies
-templates/bunfig.toml    # Shared Bun install policy
-templates/eslint.config.js # Aggregate TypeScript lint policy
-templates/.prettier*     # Shared client workspace formatting policy
+premise.yaml             # Registry manifest and workspace-file allowlist
+mise.toml                # Registry, source, and generated-client tasks
+package.json             # Source and generated-client Bun workspace
+bunfig.toml              # Shared Bun install policy
+eslint.config.js         # Aggregate TypeScript lint policy
+.prettier*               # Shared workspace formatting policy
 templates/*/             # Template-specific app workspace members
-mise.toml                # Registry development tasks
 ```
 
 ## Development Workflow
 
-1. Edit shared tooling at the `templates/` root or a template-specific overlay under `templates/<name>/`.
+1. Edit declared shared tooling at the repository root or template-specific files under `templates/<name>/`.
 2. Run `mise run format` inside the affected template.
 3. Run `mise run format:check`, `mise run lint`, `mise run test`, and `mise run build` inside that template.
 4. Run the registry-wide `mise run test` from the repository root with the companion Premise binary on `PATH`.

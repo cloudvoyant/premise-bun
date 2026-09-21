@@ -4,15 +4,15 @@
   "type": "module",
   "packageManager": "bun@1.4.2",
   "workspaces": [
-    "premise-*",
+    "templates/premise-*",
     "apps/*",
     "libs/*"
   ],
   "scripts": {
     "build": "bun run --filter '*' build",
     "test": "bun run --filter '*' test",
-    "lint": "eslint premise-* apps/* libs/* --no-error-on-unmatched-pattern --no-warn-ignored && bun run --filter '*' lint",
-    "lint:fix": "eslint premise-* apps/* libs/* --no-error-on-unmatched-pattern --fix --no-warn-ignored && bun run --filter '*' lint:fix",
+    "lint": "eslint templates/premise-* apps/* libs/* --no-error-on-unmatched-pattern --no-warn-ignored && bun run --filter '*' lint",
+    "lint:fix": "eslint templates/premise-* apps/* libs/* --no-error-on-unmatched-pattern --fix --no-warn-ignored && bun run --filter '*' lint:fix",
     "format": "prettier --plugin=prettier-plugin-svelte --ignore-path .prettierignore --write .",
     "format:check": "prettier --plugin=prettier-plugin-svelte --ignore-path .prettierignore --check ."
   },

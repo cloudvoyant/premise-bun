@@ -1,7 +1,7 @@
 ---
 name: On Merge
 
-"on":
+'on':
   push:
     branches:
       - master
@@ -28,10 +28,11 @@ jobs:
           persist-credentials: false
 
       - name: Run on-merge flow
-        uses: cloudvoyant/premise@v0
+        uses: cloudvoyant/premise@feature/mise-merge
         env:
           PREMISE_GITHUB_TOKEN: ${{ github.token }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         with:
           flow: on-merge
           release: none
+          install-premise: build
