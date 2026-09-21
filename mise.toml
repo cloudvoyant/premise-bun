@@ -16,6 +16,7 @@ svu = "3"
 description = "Validate the registry before stable publication"
 run = '''
 set -eu
+bun install
 mise run format:check
 mise run lint
 mise run build
