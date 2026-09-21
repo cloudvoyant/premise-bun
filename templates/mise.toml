@@ -1,10 +1,11 @@
-# Shared Bun environment for validating every source template. Generated
-# projects remain standalone because each template also declares Bun itself.
+# Shared Bun monorepo environment for source-template validation and generated
+# client workspaces. Source templates use premise-*; generated projects live
+# under apps/* or libs/*.
 
 monorepo_root = true
 
 [monorepo]
-config_roots = ["premise-*"]
+config_roots = ["premise-*", "apps/*", "libs/*"]
 
 [tools]
 bun = "1.4.2"
@@ -33,10 +34,10 @@ run = "bun run --filter '*' test"
 description = "Lint and type-check every template"
 depends = ["install"]
 run = '''
-if [ -d premise-commander-cli ]; then
+if [ -d premise-commander-cli ] || [ -d apps ] || [ -d libs ]; then
   bun run lint
 else
-  echo "template lint skipped: no templates created yet"
+  echo "workspace lint skipped: no projects created yet"
 fi
 '''
 
@@ -44,10 +45,10 @@ fi
 description = "Fix lint issues, format, and type-check every template"
 depends = ["install"]
 run = '''
-if [ -d premise-commander-cli ]; then
+if [ -d premise-commander-cli ] || [ -d apps ] || [ -d libs ]; then
   bun run lint:fix
 else
-  echo "template lint:fix skipped: no templates created yet"
+  echo "workspace lint:fix skipped: no projects created yet"
 fi
 '''
 

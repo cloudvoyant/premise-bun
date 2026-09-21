@@ -12,7 +12,7 @@ A Bun template registry for [Premise](https://github.com/cloudvoyant/premise). D
 | `premise-opentui-cli` | app | `premise-opentui` | Minimal OpenTUI terminal counter with explicit renderer cleanup. |
 | `premise-hono-api` | app | — | Minimal Hono REST API with health and greeting routes. |
 
-Every template is a standalone Bun project. Bun, ESLint, and Prettier configuration has one canonical copy at the `templates/` root. Premise copies those shared files into each generated project before applying the selected template overlay, whose package manifest and task definitions keep the complete Premise contract.
+Every template becomes a Bun workspace member under `apps/<name>`. Bun, ESLint, and Prettier configuration has one canonical copy at the `templates/` root. Premise merges those shared files into the generated client workspace root and copies the selected template into its app directory. The shared package and Mise configurations support both the registry's `premise-*` source directories and generated `apps/*` and `libs/*` layouts.
 
 ## Requirements
 

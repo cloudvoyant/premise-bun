@@ -1,18 +1,20 @@
 {
-  "name": "premise-bun-templates",
+  "name": "premise-bun-workspace",
   "private": true,
   "type": "module",
   "packageManager": "bun@1.4.2",
   "workspaces": [
-    "premise-*"
+    "premise-*",
+    "apps/*",
+    "libs/*"
   ],
   "scripts": {
     "build": "bun run --filter '*' build",
     "test": "bun run --filter '*' test",
-    "lint": "eslint premise-* --no-warn-ignored && bun run --filter '*' lint",
-    "lint:fix": "eslint premise-* --fix --no-warn-ignored && bun run --filter '*' lint:fix",
-    "format": "prettier --plugin=prettier-plugin-svelte --ignore-path .prettierignore --write premise-*",
-    "format:check": "prettier --plugin=prettier-plugin-svelte --ignore-path .prettierignore --check premise-*"
+    "lint": "eslint premise-* apps/* libs/* --no-error-on-unmatched-pattern --no-warn-ignored && bun run --filter '*' lint",
+    "lint:fix": "eslint premise-* apps/* libs/* --no-error-on-unmatched-pattern --fix --no-warn-ignored && bun run --filter '*' lint:fix",
+    "format": "prettier --plugin=prettier-plugin-svelte --ignore-path .prettierignore --write .",
+    "format:check": "prettier --plugin=prettier-plugin-svelte --ignore-path .prettierignore --check ."
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
