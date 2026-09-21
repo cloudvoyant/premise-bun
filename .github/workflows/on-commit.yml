@@ -1,7 +1,7 @@
 ---
 name: On Commit
 
-"on":
+'on':
   pull_request:
     branches:
       - master
@@ -29,9 +29,10 @@ jobs:
           persist-credentials: false
 
       - name: Run on-commit flow
-        uses: cloudvoyant/premise@v0
+        uses: cloudvoyant/premise@feature/mise-merge
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         with:
           flow: on-commit
           release: auto
+          install-premise: build

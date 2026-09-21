@@ -24,24 +24,23 @@ The root test invokes `pm template test`. Premise enters every declared template
 ## Project Structure
 
 ```text
-premise.yaml             # Template-registry manifest
-templates/mise.toml      # Shared Bun validation toolchain
-templates/package.json   # Private workspace and shared lint/format dependencies
-templates/bunfig.toml    # Shared Bun install policy
-templates/eslint.config.js # Aggregate TypeScript lint policy
-templates/.prettier*     # Formatting policy copied into generated projects
-templates/*/             # Template-specific source overlays
-mise.toml                # Registry development tasks
+premise.yaml             # Registry manifest and workspace-file allowlist
+mise.toml                # Registry, source, and generated-client tasks
+package.json             # Source and generated-client Bun workspace
+bunfig.toml              # Shared Bun install policy
+eslint.config.js         # Aggregate TypeScript lint policy
+.prettier*               # Shared workspace formatting policy
+templates/*/             # Template-specific app workspace members
 ```
 
 ## Development Workflow
 
-1. Edit shared tooling at the `templates/` root or a template-specific overlay under `templates/<name>/`.
+1. Edit declared shared tooling at the repository root or template-specific files under `templates/<name>/`.
 2. Run `mise run format` inside the affected template.
 3. Run `mise run format:check`, `mise run lint`, `mise run test`, and `mise run build` inside that template.
 4. Run the registry-wide `mise run test` from the repository root with the companion Premise binary on `PATH`.
 5. For Commander or OpenTUI changes, run `npm pack --dry-run` in the template and inspect the package contents.
-6. Generate the edited template through a local selector and inspect the standalone result.
+6. Generate the edited template through a local selector and inspect the client monorepo root and its new `apps/<name>` member.
 
 ```bash
 pm generate "$PWD":premise-hono-api

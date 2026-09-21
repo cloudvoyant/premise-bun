@@ -3,9 +3,9 @@
 ## Critical Rules
 
 - Use `mise run <task>` for build, test, lint, format, and run operations; check `mise tasks` before direct commands.
-- Keep the repository root as a Premise template registry, not a Bun package or monorepo.
-- Keep the Bun monorepo boundary and shared Bun, ESLint, and Prettier tooling under `templates/` only.
-- Every template must be standalone after Premise copies it; keep shared `bunfig.toml`, ESLint, and Prettier files at the `templates/` root so Premise copies them before applying the selected template overlay.
+- Keep the repository root as both the Premise registry development workspace and the Bun source workspace.
+- Keep shared Bun, ESLint, Prettier, package, and Mise configuration at the repository root.
+- Declare every generated client-root input explicitly in `template_registry.workspace_files`; selected template contents belong under `templates/<name>` in source and `apps/<name>` after generation.
 - Every template must implement all Premise app contract tasks: `install`, `build`, `clean`, `test`, `lint`, `lint:fix`, `format`, `format:check`, `env-pull`, `publish:rc`, `publish`, `run`, `dev`, `deploy`, and `e2e`.
 - Interactive servers and TUIs must terminate under `PREMISE_TEMPLATE_TEST=1`.
 - Keep release infrastructure limited to npm publication for `premise-commander` and `premise-opentui`; do not add deployment, publish the web/API templates, or commit credentials.
