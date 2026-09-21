@@ -130,6 +130,7 @@ fi
 
 [tasks.run]
 description = "Run the application"
+depends = ["install"]
 run = '''
 set -eu
 if [ "${PREMISE_TEMPLATE_TEST:-}" = "1" ]; then
@@ -141,6 +142,7 @@ fi
 
 [tasks.dev]
 description = "Run the application in development mode"
+depends = ["install"]
 run = '''
 set -eu
 if [ "${PREMISE_TEMPLATE_TEST:-}" = "1" ]; then
@@ -156,4 +158,5 @@ run = 'echo "deploy: no deployment target configured"'
 
 [tasks.e2e]
 description = "Run the finite application smoke test"
+depends = ["install"]
 run = "sh -c 'bun run test'"
