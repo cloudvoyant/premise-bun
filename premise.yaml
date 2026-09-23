@@ -37,6 +37,15 @@ template_registry:
           populate: name
       substitutions:
         premise-tanstack-start-app: name
+    - name: premise-tanstack-app
+      kind: app
+      path: templates/premise-tanstack-app
+      questions:
+        - prompt: 'App name:'
+          type: string
+          populate: name
+      substitutions:
+        premise-tanstack-app: name
     - name: premise-sveltekit-app
       kind: app
       path: templates/premise-sveltekit-app
@@ -46,6 +55,15 @@ template_registry:
           populate: name
       substitutions:
         premise-sveltekit-app: name
+    - name: premise-svelte-app
+      kind: app
+      path: templates/premise-svelte-app
+      questions:
+        - prompt: 'App name:'
+          type: string
+          populate: name
+      substitutions:
+        premise-svelte-app: name
     - name: premise-opentui-cli
       kind: app
       path: templates/premise-opentui-cli
