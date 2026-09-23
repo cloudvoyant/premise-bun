@@ -44,16 +44,22 @@ templates/*/             # Template-specific app workspace members
 
 ```bash
 pm generate "$PWD":premise-hono-api
+pm generate "$PWD":premise-svelte-app
+pm generate "$PWD":premise-tanstack-app
 ```
 
 Remote selectors always use a repository's default branch. Use an absolute local source while this feature is unmerged.
 
+The standalone Svelte template uses the direct Svelte Vite plugin and produces `dist/`; it has no SvelteKit configuration. The standalone TanStack template uses React, Vite, and a code-defined root/index route tree; it has no TanStack Start dependency, server bundle, route generator, or generated route tree. Run `mise run build` in either generated app to produce static assets, and use `PREMISE_TEMPLATE_TEST=1 mise run run` or `PREMISE_TEMPLATE_TEST=1 mise run dev` for finite contract checks.
+
 ## Publishing
 
-The public npm package names are `premise-commander` and `premise-opentui`. Their template-level `publish:rc` and `publish` tasks require `PREMISE_PUBLISH_VERSION` outside contract-test mode. They build the CLI, update the package version temporarily, skip versions already present on npm, treat npm's immutable-version conflict as an idempotent skip during registry propagation, publish with provenance, and restore the source manifest.
+The public npm package names are `premise-commander` and `premise-opentui`. Their template-level `publish:rc` and `publish` tasks require `PREMISE_PUBLISH_VERSION` outside contract-test mode. They build the CLI, update the package version temporarily, skip versions already present on npm, treat npm's immutable-version conflict as an idempotent skip during registry propagation, publish with provenance, and restore the source manifest. The root publication loops name only these two templates; they do not infer publication from template kind or package `private` metadata.
+
+The standalone Svelte and TanStack Router templates return successful deferral messages from `publish` and `publish:rc`. Static GitHub artifacts, OCI containers, and a generation questionnaire for selecting between them remain future work.
 
 Feature-branch pushes publish only when the HEAD commit contains `[publish-rc]`. The root task computes `0.x.y-rc.<GitHub run number>` with svu and publishes both packages with the `rc` dist-tag. A merge to `master` runs the full registry validation, publishes both stable packages with `latest`, and pushes the corresponding version tag. Each workflow uses the Premise `v0` action; Mise installs Node, Bun, and release tools declared by the repository. GitHub Actions passes the Cloudvoyant `NPM_TOKEN` secret only to that lifecycle action.
 
 ## Deferred Infrastructure
 
-Deployment configuration, publication for TanStack Start, SvelteKit, and Hono, and standalone binary artifacts remain deferred.
+Deployment configuration, publication for the SPA, TanStack Start, SvelteKit, and Hono templates, questionnaire-selected static archives or OCI containers, and standalone binary artifacts remain deferred.
