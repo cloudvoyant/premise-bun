@@ -28,11 +28,11 @@ jobs:
           persist-credentials: false
 
       - name: Run on-merge flow
-        uses: cloudvoyant/premise@feature/mise-merge
+        uses: cloudvoyant/premise@feature/tauri-support
         env:
-          PREMISE_GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ github.token }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         with:
           flow: on-merge
-          release: none
+          release: auto
           install-premise: build

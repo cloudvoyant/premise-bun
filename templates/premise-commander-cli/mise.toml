@@ -68,7 +68,7 @@ if npm view "$name@$version" version >/dev/null 2>&1; then
   echo "skip: $name@$version already published"
 else
   publish_log="$(mktemp)"
-  if npm publish --access public --tag rc --provenance >"$publish_log" 2>&1; then
+  if npm publish --tag rc --provenance >"$publish_log" 2>&1; then
     status=0
   else
     status=$?
@@ -110,7 +110,7 @@ if npm view "$name@$version" version >/dev/null 2>&1; then
   echo "skip: $name@$version already published"
 else
   publish_log="$(mktemp)"
-  if npm publish --access public --tag latest --provenance >"$publish_log" 2>&1; then
+  if npm publish --tag latest --provenance >"$publish_log" 2>&1; then
     status=0
   else
     status=$?

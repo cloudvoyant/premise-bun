@@ -2,7 +2,7 @@
 
 ## Overview
 
-`premise-bun` is an external template registry with two publishable CLI starters. Premise owns source discovery, prompting, copying, substitutions, generated-project registration, and lifecycle orchestration. This repository owns the Bun template catalog, the files copied into generated applications, and the narrow npm release automation for `premise-commander` and `premise-opentui`.
+`premise-bun` is an external template registry with two publishable CLI starters. Premise owns source discovery, prompting, copying, substitutions, generated-project registration, version planning, tagging, and lifecycle orchestration. This repository owns the Bun template catalog, generated application files, and the npm publish tasks run for eligible packages.
 
 ## Repository Boundaries
 
@@ -34,7 +34,7 @@ Premise registers `cloudvoyant/premise-bun` in its ordered `OfficialSources` lis
 
 ## Publication
 
-Each workflow delegates its complete lifecycle to the major-versioned Premise action. Mise installs the declared Node, Bun, and release tools without separate setup actions. A feature-branch push marked `[publish-rc]` invokes the root `publish:rc` task, whose explicit allowlist gives only Commander and OpenTUI the same `0.x.y-rc.<run>` version and publishes the `rc` dist-tag. `on-merge.yml` runs the root `on-merge` task, which validates the registry, publishes only those two stable packages with `latest`, and pushes the matching semantic-version tag. Reruns skip package versions that already exist. Package `private` metadata prevents npm publication but is not the general application-artifact routing mechanism.
+Each workflow delegates its lifecycle to the Premise action. Mise installs Node and Bun without separate setup actions. Premise's Bun package-manager plugin selects declared templates whose `package.json` has `private: false` and a `publishConfig.registry`. A feature-branch push marked `[publish-rc]` computes the shared `0.x.y-rc.<run>` version and invokes each eligible template's `publish:rc` task with the `rc` dist-tag. On merges to `master`, the root `on-merge` task validates the registry; Premise creates or reuses the stable tag before invoking each eligible template's `publish` task with `latest`. The template tasks skip versions already present on npm. `publishConfig.access` describes visibility, not whether the package can be published. GoReleaser has no Bun archive target; skipping that step does not skip npm. Private apps, static-site uploads, and OCI deployment have no configured destination.
 
 The workflows authenticate with the Cloudvoyant `NPM_TOKEN` Actions secret. Package manifests remain unscoped: `premise-commander` and `premise-opentui`.
 

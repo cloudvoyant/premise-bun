@@ -20,65 +20,10 @@ mise run format:check
 mise run lint
 mise run build
 mise run test
-mise run publish
 '''
 
-[tasks."publish:rc"]
-description = "Publish Commander and OpenTUI release candidates"
-run = '''
-set -eu
-if [ -n "${NODE_AUTH_TOKEN:-}" ]; then
-  npmrc="$(mktemp)"
-  trap 'rm -f "$npmrc"' EXIT
-  printf '%s\n' '//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}' > "$npmrc"
-  chmod 600 "$npmrc"
-  export NPM_CONFIG_USERCONFIG="$npmrc"
-fi
-npm whoami >/dev/null
-base_tag="$(svu next --tag.pattern 'v*')"
-base_version="${base_tag#v}"
-identifier="${GITHUB_RUN_NUMBER:-$(date -u +%Y%m%d%H%M%S)}"
-version="${base_version}-rc.${identifier}"
-for package in premise-commander-cli premise-opentui-cli; do
-  (cd "templates/$package" && PREMISE_PUBLISH_VERSION="$version" mise run publish:rc)
-done
-echo "published CLI release candidates at $version"
-'''
-
-[tasks.publish]
-description = "Publish stable Commander and OpenTUI packages"
-run = '''
-set -eu
-if [ -n "${NODE_AUTH_TOKEN:-}" ]; then
-  npmrc="$(mktemp)"
-  trap 'rm -f "$npmrc"' EXIT
-  printf '%s\n' '//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}' > "$npmrc"
-  chmod 600 "$npmrc"
-  export NPM_CONFIG_USERCONFIG="$npmrc"
-fi
-npm whoami >/dev/null
-tag="$(svu next --tag.pattern 'v*')"
-version="${tag#v}"
-for package in premise-commander-cli premise-opentui-cli; do
-  (cd "templates/$package" && PREMISE_PUBLISH_VERSION="$version" mise run publish)
-done
-if git rev-parse --quiet --verify "refs/tags/$tag" >/dev/null; then
-  echo "skip: tag $tag already exists"
-elif [ "${GITHUB_ACTIONS:-}" = "true" ]; then
-  : "${GITHUB_REPOSITORY:?GITHUB_REPOSITORY is required}"
-  : "${GITHUB_SHA:?GITHUB_SHA is required}"
-  github_token="${PREMISE_GITHUB_TOKEN:-${GH_TOKEN:-${GITHUB_TOKEN:-}}}"
-  : "${github_token:?PREMISE_GITHUB_TOKEN, GH_TOKEN, or GITHUB_TOKEN is required}"
-  GH_TOKEN="$github_token" gh api "repos/$GITHUB_REPOSITORY/git/refs" \
-    --method POST \
-    --field "ref=refs/tags/$tag" \
-    --field "sha=$GITHUB_SHA" >/dev/null
-else
-  git tag -a "$tag" -m "Release $tag"
-  git push origin "$tag"
-fi
-echo "published stable CLI packages at $version"
-'''
+# Premise plans tags and selects publishable packages. Template-level publish
+# tasks keep ownership of building and uploading their own npm packages.
 
 [tasks."template-test"]
 description = "Run every declared template through the Premise contract"
