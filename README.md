@@ -54,7 +54,7 @@ bunx premise-commander Premise
 bunx premise-opentui
 ```
 
-Feature-branch pushes whose commit message contains `[publish-rc]` publish both packages with an `rc` dist-tag. Merges to `master` validate the registry, publish stable versions with the `latest` dist-tag, and create the matching `vMAJOR.MINOR.PATCH` tag.
+Premise's Bun package-manager plugin selects packages with `private: false` and a configured `publishConfig.registry`. Feature-branch pushes marked `[publish-rc]` publish eligible packages with an `rc` dist-tag. Merges to `master` validate the registry; Premise creates or reuses the matching `vMAJOR.MINOR.PATCH` tag, then invokes each eligible template's `publish` task with the stable version. Bun has no native GitHub release archives configured. Private apps, static-site uploads, and container deployments remain outside this publication path.
 
 ## Development
 
