@@ -28,7 +28,7 @@ jobs:
           persist-credentials: false
 
       - name: Run on-merge flow
-        uses: cloudvoyant/premise@feature/tauri-support
+        uses: cloudvoyant/premise@v0
         env:
           GITHUB_TOKEN: ${{ github.token }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
