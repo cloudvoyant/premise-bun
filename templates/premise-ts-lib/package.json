@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "description": "A private typed Bun library starter",
-  "license": "MIT",
   "type": "module",
   "packageManager": "bun@1.4.2",
   "engines": {
@@ -11,8 +10,7 @@
   },
   "files": [
     "dist",
-    "README.md",
-    "LICENSE"
+    "README.md"
   ],
   "exports": {
     ".": {
