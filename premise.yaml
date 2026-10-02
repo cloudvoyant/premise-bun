@@ -84,3 +84,12 @@ template_registry:
           populate: name
       substitutions:
         premise-hono-api: name
+    - name: premise-ts-lib
+      kind: lib
+      path: templates/premise-ts-lib
+      questions:
+        - prompt: 'Library name:'
+          type: string
+          populate: name
+      substitutions:
+        premise-ts-lib: name

@@ -1,6 +1,6 @@
 # premise-bun
 
-A Bun template registry for [Premise](https://github.com/cloudvoyant/premise). Developers can generate one of seven minimal TypeScript applications alongside Premise's native Go and Cargo templates.
+A Bun template registry for [Premise](https://github.com/cloudvoyant/premise). Developers can generate one of seven minimal TypeScript applications or a private TypeScript library alongside Premise's native Go and Cargo templates.
 
 ## Templates
 
@@ -13,8 +13,9 @@ A Bun template registry for [Premise](https://github.com/cloudvoyant/premise). D
 | `premise-svelte-app`         | app  | —                   | Client-only Svelte SPA using the direct Vite plugin.             |
 | `premise-opentui-cli`        | app  | `premise-opentui`   | Minimal OpenTUI terminal counter with explicit renderer cleanup. |
 | `premise-hono-api`           | app  | —                   | Minimal Hono REST API with health and greeting routes.           |
+| `premise-ts-lib`             | lib  | —                   | Private typed Bun library for internal consumption.              |
 
-Every template becomes a Bun workspace member under `apps/<name>`. Bun, ESLint, Prettier, package, and Mise configuration has one canonical copy at the repository root. `template_registry.workspace_files` explicitly declares those files as generated client workspace inputs. Premise merges them into the client root and copies only the selected `templates/<name>` tree into its app directory. The package and Mise configurations support both the registry's `templates/premise-*` source directories and generated `apps/*` and `libs/*` layouts.
+Every app template becomes a Bun workspace member under `apps/<name>`, while `premise-ts-lib` generates under `libs/<name>`. The private library is intended for internal consumption and is not selected for npm publication. Its successful no-op publication tasks remain part of the common validation contract. Bun, ESLint, Prettier, package, and Mise configuration has one canonical copy at the repository root. `template_registry.workspace_files` explicitly declares those files as generated client workspace inputs. Premise merges them into the client root and copies only the selected `templates/<name>` tree into its app or library directory. The package and Mise configurations support both the registry's `templates/premise-*` source directories and generated `apps/*` and `libs/*` layouts.
 
 ## Requirements
 
@@ -34,7 +35,7 @@ Select a template, then enter a lowercase npm-safe project name. To skip the pic
 pm generate cloudvoyant/premise-bun:premise-hono-api
 ```
 
-Choose `premise-svelte-app` for a client-only Svelte build or `premise-sveltekit-app` when the application needs SvelteKit and server-side rendering. Choose `premise-tanstack-app` for a client-only React application with code-defined TanStack Router routes or `premise-tanstack-start-app` when the application needs TanStack Start and server-side rendering.
+Choose `premise-svelte-app` for a client-only Svelte build or `premise-sveltekit-app` when the application needs SvelteKit and server-side rendering. Choose `premise-ts-lib` for an internal TypeScript library; it generates into `libs/<name>`. Choose `premise-tanstack-app` for a client-only React application with code-defined TanStack Router routes or `premise-tanstack-start-app` when the application needs TanStack Start and server-side rendering.
 
 The two client-only templates emit static assets to `dist/`:
 
@@ -54,7 +55,7 @@ bunx premise-commander Premise
 bunx premise-opentui
 ```
 
-Premise's Bun package-manager plugin selects packages with `private: false` and a configured `publishConfig.registry`. Feature-branch pushes marked `[publish-rc]` publish eligible packages with an `rc` dist-tag. Merges to `master` validate the registry; Premise creates or reuses the matching `vMAJOR.MINOR.PATCH` tag, then invokes each eligible template's `publish` task with the stable version. Bun has no native GitHub release archives configured. Private apps, static-site uploads, and container deployments remain outside this publication path.
+Premise's Bun package-manager plugin selects packages with `private: false` and a configured `publishConfig.registry`. Feature-branch pushes marked `[publish-rc]` publish eligible packages with an `rc` dist-tag. Merges to `master` validate the registry; Premise creates or reuses the matching `vMAJOR.MINOR.PATCH` tag, then invokes each eligible template's `publish` task with the stable version. Bun has no native GitHub release archives configured. Private apps and libraries, static-site uploads, and container deployments remain outside this publication path. A future public/private question and conditional package setup can be added after Premise gains a suitable conditional templating mechanism.
 
 ## Development
 

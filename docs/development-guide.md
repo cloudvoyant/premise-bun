@@ -19,7 +19,7 @@ cd "$PREMISE_BUN_REPO"
 PATH="$PREMISE_REPO/bin:$PATH" mise run test
 ```
 
-The root test invokes `pm template test`. Premise enters every declared template, installs Mise tools, runs `install`, and then runs the complete app contract with `PREMISE_TEMPLATE_TEST=1`.
+The root test invokes `pm template test`. Premise enters every declared template, installs Mise tools, runs `install`, and then runs each template's contract with `PREMISE_TEMPLATE_TEST=1`; the private library uses the smaller library contract.
 
 ## Project Structure
 
@@ -39,18 +39,21 @@ templates/*/             # Template-specific app workspace members
 2. Run `mise run format` inside the affected template.
 3. Run `mise run format:check`, `mise run lint`, `mise run test`, and `mise run build` inside that template.
 4. Run the registry-wide `mise run test` from the repository root with the companion Premise binary on `PATH`.
-5. For Commander or OpenTUI changes, run `npm pack --dry-run` in the template and inspect the package contents.
-6. Generate the edited template through a local selector and inspect the client monorepo root and its new `apps/<name>` member.
+5. For the private library, generate with `pm generate "$PWD":premise-ts-lib` and inspect the generated `libs/<name>` member. Run its `install`, `clean`, `build`, `test`, `lint`, `format:check`, and no-op publication tasks.
+6. Use the explicit local selector for focused generation and the companion-Premise test for the full registry contract.
+7. For Commander or OpenTUI changes, run `npm pack --dry-run` in the template and inspect the package contents.
+8. Generate the edited template through a local selector and inspect the client monorepo root and its new `apps/<name>` member.
 
 ```bash
 pm generate "$PWD":premise-hono-api
 pm generate "$PWD":premise-svelte-app
 pm generate "$PWD":premise-tanstack-app
+pm generate "$PWD":premise-ts-lib
 ```
 
 Remote selectors always use a repository's default branch. Use an absolute local source while this feature is unmerged.
 
-The standalone Svelte template uses the direct Svelte Vite plugin and produces `dist/`; it has no SvelteKit configuration. The standalone TanStack template uses React, Vite, and a code-defined root/index route tree; it has no TanStack Start dependency, server bundle, route generator, or generated route tree. Run `mise run build` in either generated app to produce static assets, and use `PREMISE_TEMPLATE_TEST=1 mise run run` or `PREMISE_TEMPLATE_TEST=1 mise run dev` for finite contract checks.
+The private TypeScript library uses the smaller common library contract, generates into `libs/<name>`, and has successful no-op `publish` and `publish:rc` tasks for validation. It is not selected for npm publication. The standalone Svelte template uses the direct Svelte Vite plugin and produces `dist/`; it has no SvelteKit configuration. The standalone TanStack template uses React, Vite, and a code-defined root/index route tree; it has no TanStack Start dependency, server bundle, route generator, or generated route tree. Run `mise run build` in either generated app to produce static assets, and use `PREMISE_TEMPLATE_TEST=1 mise run run` or `PREMISE_TEMPLATE_TEST=1 mise run dev` for finite contract checks.
 
 ## Publishing
 
@@ -62,4 +65,4 @@ Feature-branch pushes publish only when the HEAD commit contains `[publish-rc]`.
 
 ## Deferred Infrastructure
 
-Deployment configuration, publication for the SPA, TanStack Start, SvelteKit, and Hono templates, questionnaire-selected static archives or OCI containers, and standalone binary artifacts remain deferred.
+Deployment configuration, publication for the SPA, TanStack Start, SvelteKit, Hono, and private library templates, questionnaire-selected static archives or OCI containers, and standalone binary artifacts remain deferred. A public/private question and conditional package setup remain future work until Premise gains a suitable conditional templating mechanism.
