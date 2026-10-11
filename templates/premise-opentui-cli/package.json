@@ -29,10 +29,6 @@
     "build": "bun build src/index.ts --outdir dist --target bun --external=@opentui/core-*",
     "clean": "rm -rf dist coverage",
     "test": "bun test",
-    "lint": "tsc --noEmit",
-    "lint:fix": "bun run format && bun run lint",
-    "format": "prettier --write .",
-    "format:check": "prettier --check .",
     "dev": "bun --watch src/index.ts",
     "start": "bun src/index.ts"
   },

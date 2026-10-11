@@ -8,10 +8,6 @@
     "build": "vite build",
     "clean": "rm -rf dist coverage",
     "test": "bun test",
-    "lint": "svelte-check --tsconfig ./tsconfig.json",
-    "lint:fix": "bun run format && bun run lint",
-    "format": "prettier --plugin=prettier-plugin-svelte --write .",
-    "format:check": "prettier --plugin=prettier-plugin-svelte --check .",
     "dev": "vite",
     "start": "vite preview"
   },

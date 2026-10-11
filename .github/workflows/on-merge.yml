@@ -1,24 +1,22 @@
----
 name: On Merge
 
 'on':
   push:
-    branches:
-      - master
+    branches: [master]
 
 permissions:
-  contents: write
-  id-token: write
+  contents: read
 
 concurrency:
   group: publish-stable
   cancel-in-progress: false
 
 jobs:
-  publish:
-    name: Validate and publish
+  verify:
+    name: Validate and plan publication
     runs-on: ubuntu-latest
-    if: github.event.before != '0000000000000000000000000000000000000000'
+    outputs:
+      version: ${{ steps.plan.outputs.release_version }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -26,13 +24,74 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
           persist-credentials: false
-
-      - name: Run on-merge flow
+      - name: Plan publication
+        id: plan
         uses: cloudvoyant/premise@v0
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         with:
+          command: plan
           flow: on-merge
           release: auto
           install-premise: build
+      - name: Run validation
+        uses: cloudvoyant/premise@v0
+        with:
+          command: flow
+          flow: on-merge
+          release: none
+          install-premise: skip
+
+  publish:
+    name: Publish stable release
+    needs: verify
+    if: needs.verify.outputs.version != ''
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+          persist-credentials: false
+      - name: Check npm credential before creating a release tag
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          if [ -z "$NODE_AUTH_TOKEN" ]; then
+            echo '::error::NPM_TOKEN is unavailable before publication'
+            exit 1
+          fi
+      - name: Create or reuse release tag
+        uses: cloudvoyant/premise@v0
+        env:
+          GH_TOKEN: ${{ github.token }}
+        with:
+          command: release
+          flow: on-merge
+          release: none
+          install-premise: build
+          channel: stable
+          version: ${{ needs.verify.outputs.version }}
+      - name: Publish npm packages
+        uses: cloudvoyant/premise@v0
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        with:
+          command: packages
+          flow: on-merge
+          release: none
+          install-premise: skip
+          channel: stable
+          version: ${{ needs.verify.outputs.version }}
+      - name: Publish GitHub release metadata
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_VERSION: ${{ needs.verify.outputs.version }}
+        run: |
+          if gh release view "$RELEASE_VERSION" >/dev/null 2>&1; then
+            gh release edit "$RELEASE_VERSION" --prerelease=false --latest=true
+          else
+            gh release create "$RELEASE_VERSION" --verify-tag --generate-notes --prerelease=false --latest=true
+          fi

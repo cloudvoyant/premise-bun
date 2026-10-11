@@ -28,6 +28,8 @@ The Svelte SPA uses `@sveltejs/vite-plugin-svelte` directly and has no SvelteKit
 
 `PREMISE_TEMPLATE_TEST=1` changes interactive `run` and `dev` tasks into finite build checks. Commander and OpenTUI change publication into `npm pack --dry-run`, so contract tests never publish. They publish release candidates from marked feature-branch pushes and stable packages after merges to `master`; the other five templates keep explicit publication no-ops.
 
+Mise owns lint and formatting tasks directly; package manifests do not duplicate those commands. Project tasks set `dir = "{{ config_root }}/.."` to run from `templates/` in the registry, or `apps/` and `libs/` in generated workspaces, and target only `MISE_PROJECT_ROOT`. Prettier loads `../.prettierignore`, and ESLint loads `../eslint.config.js`, from the workspace root. Framework-specific type checks run inside the project. Root formatting checks cover the whole workspace.
+
 ## Premise Integration
 
 Premise registers `cloudvoyant/premise-bun` in its ordered `OfficialSources` list. Explicit remote and local selectors already use the generic registry path; no Bun-specific scaffold code or package-manager schema field is required.

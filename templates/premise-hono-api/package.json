@@ -8,10 +8,6 @@
     "build": "bun build src/index.ts --outdir dist --target bun",
     "clean": "rm -rf dist coverage",
     "test": "bun test",
-    "lint": "tsc --noEmit",
-    "lint:fix": "bun run format && bun run lint",
-    "format": "prettier --write .",
-    "format:check": "prettier --check .",
     "dev": "bun run --hot src/index.ts",
     "start": "bun src/index.ts"
   },

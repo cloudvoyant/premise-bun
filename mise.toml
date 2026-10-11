@@ -48,14 +48,14 @@ run = "mise run template-test"
 description = "Format registry and template files"
 run = '''
 mise fmt
-bun run format
+bunx --no-install prettier --plugin=prettier-plugin-svelte --write .
 '''
 
 [tasks."format:check"]
 description = "Check registry and template formatting"
 run = '''
 mise fmt --check
-bun run format:check
+bunx --no-install prettier --plugin=prettier-plugin-svelte --check .
 '''
 
 [tasks.lint]
@@ -64,9 +64,13 @@ run = '''
 set -eu
 mise fmt --check
 [ -f premise.yaml ] || { echo "error: missing premise.yaml" >&2; exit 1; }
-bun run lint
+mise run --jobs 1 //templates/...:lint
 echo "registry config valid"
 '''
+
+[tasks."lint:fix"]
+description = "Fix registry project lint and formatting"
+run = "mise run --jobs 1 //templates/...:lint:fix"
 
 [tasks.clean]
 description = "Remove generated Bun artifacts"
