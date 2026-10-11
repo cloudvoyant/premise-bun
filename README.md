@@ -57,6 +57,8 @@ bunx premise-opentui
 
 Premise's Bun package-manager plugin selects packages with `private: false` and a configured `publishConfig.registry`. Feature-branch pushes marked `[publish-rc]` publish eligible packages with an `rc` dist-tag. Merges to `master` validate the registry; Premise creates or reuses the matching `vMAJOR.MINOR.PATCH` tag, then invokes each eligible template's `publish` task with the stable version. Bun has no native GitHub release archives configured. Private apps and libraries, static-site uploads, and container deployments remain outside this publication path. A future public/private question and conditional package setup can be added after Premise gains a suitable conditional templating mechanism.
 
+The GitHub workflows pin Premise to `v0.4.3` and run validation before publication. They plan the version, create or reuse its tag, publish npm packages, and create GitHub release metadata in separate steps. The publish job requires `NPM_TOKEN`; validation runs without registry credentials. RC releases use the npm `rc` dist-tag and GitHub prerelease status, while stable releases use `latest`. GitHub releases contain metadata only because this registry publishes npm packages rather than native archives.
+
 ## Development
 
 See the [development guide](docs/development-guide.md) for local validation and publication details. See [architecture](docs/architecture.md) for the registry layout.
