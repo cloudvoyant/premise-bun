@@ -1,6 +1,0 @@
-dist/
-.output/
-.svelte-kit/
-build/
-coverage/
-bun.lock

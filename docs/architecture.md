@@ -28,6 +28,8 @@ The Svelte SPA uses `@sveltejs/vite-plugin-svelte` directly and has no SvelteKit
 
 `PREMISE_TEMPLATE_TEST=1` changes interactive `run` and `dev` tasks into finite build checks. Commander and OpenTUI change publication into `npm pack --dry-run`, so contract tests never publish. They publish release candidates from marked feature-branch pushes and stable packages after merges to `master`; the other five templates keep explicit publication no-ops.
 
+Template formatting tasks locate the shared Prettier configuration with `prettier --find-config-path` and use the ignore file beside it. This keeps workspace policy at the root without assuming a fixed template destination depth. Root formatting checks cover the full workspace; template contract checks cover the selected project with that same policy.
+
 ## Premise Integration
 
 Premise registers `cloudvoyant/premise-bun` in its ordered `OfficialSources` list. Explicit remote and local selectors already use the generic registry path; no Bun-specific scaffold code or package-manager schema field is required.
