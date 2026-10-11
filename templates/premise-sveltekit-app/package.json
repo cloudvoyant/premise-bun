@@ -8,10 +8,6 @@
     "build": "vite build",
     "clean": "rm -rf .svelte-kit build coverage",
     "test": "bun test",
-    "lint": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-    "lint:fix": "bun run format && bun run lint",
-    "format": "prettier --ignore-path \"$(dirname \"$(prettier --find-config-path package.json)\")/.prettierignore\" --plugin=prettier-plugin-svelte --write .",
-    "format:check": "prettier --ignore-path \"$(dirname \"$(prettier --find-config-path package.json)\")/.prettierignore\" --plugin=prettier-plugin-svelte --check .",
     "dev": "vite dev",
     "start": "vite preview"
   },

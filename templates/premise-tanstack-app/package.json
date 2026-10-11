@@ -9,10 +9,6 @@
     "build": "vite build && tsc --noEmit",
     "clean": "rm -rf dist coverage",
     "test": "bun test",
-    "lint": "tsc --noEmit",
-    "lint:fix": "bun run format && bun run lint",
-    "format": "prettier --ignore-path \"$(dirname \"$(prettier --find-config-path package.json)\")/.prettierignore\" --write .",
-    "format:check": "prettier --ignore-path \"$(dirname \"$(prettier --find-config-path package.json)\")/.prettierignore\" --check .",
     "dev": "vite",
     "start": "vite preview"
   },

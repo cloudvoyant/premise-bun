@@ -28,7 +28,7 @@ The Svelte SPA uses `@sveltejs/vite-plugin-svelte` directly and has no SvelteKit
 
 `PREMISE_TEMPLATE_TEST=1` changes interactive `run` and `dev` tasks into finite build checks. Commander and OpenTUI change publication into `npm pack --dry-run`, so contract tests never publish. They publish release candidates from marked feature-branch pushes and stable packages after merges to `master`; the other five templates keep explicit publication no-ops.
 
-Template formatting tasks locate the shared Prettier configuration with `prettier --find-config-path` and use the ignore file beside it. This keeps workspace policy at the root without assuming a fixed template destination depth. Root formatting checks cover the full workspace; template contract checks cover the selected project with that same policy.
+Mise owns lint and formatting tasks directly; package manifests do not duplicate those commands. Project tasks run Prettier and ESLint from `MISE_MONOREPO_ROOT`, targeting only `MISE_PROJECT_ROOT`. Outside a monorepo they use the project root. This loads shared configuration and ignore files without assuming a fixed directory depth. Framework-specific type checks run inside the project. Root formatting checks cover the whole workspace.
 
 ## Premise Integration
 

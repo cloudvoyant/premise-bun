@@ -23,22 +23,42 @@ run = "bun run test"
 [tasks.lint]
 description = "Type-check the application"
 depends = ["install"]
-run = "bun run lint"
+run = '''
+set -eu
+cd "${MISE_MONOREPO_ROOT:-$MISE_PROJECT_ROOT}"
+bunx --no-install eslint "$MISE_PROJECT_ROOT" --no-warn-ignored
+cd "$MISE_PROJECT_ROOT"
+bunx --no-install tsc --noEmit
+'''
 
 [tasks."lint:fix"]
 description = "Format and type-check the application"
-depends = ["install"]
-run = "bun run lint:fix"
+depends = ["install", "format"]
+run = '''
+set -eu
+cd "${MISE_MONOREPO_ROOT:-$MISE_PROJECT_ROOT}"
+bunx --no-install eslint "$MISE_PROJECT_ROOT" --fix --no-warn-ignored
+cd "$MISE_PROJECT_ROOT"
+mise run lint
+'''
 
 [tasks.format]
 description = "Format project files"
 depends = ["install"]
-run = "bun run format"
+run = '''
+set -eu
+cd "${MISE_MONOREPO_ROOT:-$MISE_PROJECT_ROOT}"
+bunx --no-install prettier --plugin=prettier-plugin-svelte --write "$MISE_PROJECT_ROOT"
+'''
 
 [tasks."format:check"]
 description = "Check project formatting"
 depends = ["install"]
-run = "bun run format:check"
+run = '''
+set -eu
+cd "${MISE_MONOREPO_ROOT:-$MISE_PROJECT_ROOT}"
+bunx --no-install prettier --plugin=prettier-plugin-svelte --check "$MISE_PROJECT_ROOT"
+'''
 
 [tasks.env-pull]
 description = "Pull external environment configuration"

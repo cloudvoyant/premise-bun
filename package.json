@@ -10,11 +10,7 @@
   ],
   "scripts": {
     "build": "bun run --filter '*' build",
-    "test": "bun run --filter '*' test",
-    "lint": "eslint templates/premise-* apps/* libs/* --no-error-on-unmatched-pattern --no-warn-ignored && bun run --filter '*' lint",
-    "lint:fix": "eslint templates/premise-* apps/* libs/* --no-error-on-unmatched-pattern --fix --no-warn-ignored && bun run --filter '*' lint:fix",
-    "format": "prettier --plugin=prettier-plugin-svelte --ignore-path .prettierignore --write .",
-    "format:check": "prettier --plugin=prettier-plugin-svelte --ignore-path .prettierignore --check ."
+    "test": "bun run --filter '*' test"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
