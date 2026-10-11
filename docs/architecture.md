@@ -28,7 +28,7 @@ The Svelte SPA uses `@sveltejs/vite-plugin-svelte` directly and has no SvelteKit
 
 `PREMISE_TEMPLATE_TEST=1` changes interactive `run` and `dev` tasks into finite build checks. Commander and OpenTUI change publication into `npm pack --dry-run`, so contract tests never publish. They publish release candidates from marked feature-branch pushes and stable packages after merges to `master`; the other five templates keep explicit publication no-ops.
 
-Mise owns lint and formatting tasks directly; package manifests do not duplicate those commands. Project tasks use Mise’s `dir` option to run Prettier and ESLint from the Git repository root, targeting only `MISE_PROJECT_ROOT`. Outside a Git repository they use the project root. This loads shared configuration and ignore files without assuming a fixed directory depth. Framework-specific type checks run inside the project. Root formatting checks cover the whole workspace.
+Mise owns lint and formatting tasks directly; package manifests do not duplicate those commands. Project tasks set `dir = "{{ config_root }}/.."` to run from `templates/` in the registry, or `apps/` and `libs/` in generated workspaces, and target only `MISE_PROJECT_ROOT`. Prettier loads `../.prettierignore`, and ESLint loads `../eslint.config.js`, from the workspace root. Framework-specific type checks run inside the project. Root formatting checks cover the whole workspace.
 
 ## Premise Integration
 

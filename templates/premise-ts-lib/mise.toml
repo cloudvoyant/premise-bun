@@ -23,32 +23,32 @@ run = "bun run test"
 [tasks.lint]
 description = "Type-check the library and tests"
 depends = ["install"]
-dir = "{{ exec(command='git rev-parse --show-toplevel 2>/dev/null || pwd') }}"
+dir = "{{ config_root }}/.."
 run = [
-  "bunx --no-install eslint \"$MISE_PROJECT_ROOT\" --no-warn-ignored",
+  "bunx --no-install eslint --config ../eslint.config.js \"$MISE_PROJECT_ROOT\" --no-warn-ignored",
   "mise run -C \"$MISE_PROJECT_ROOT\" typecheck",
 ]
 
 [tasks."lint:fix"]
 description = "Format and type-check the library"
 depends = ["install", "format"]
-dir = "{{ exec(command='git rev-parse --show-toplevel 2>/dev/null || pwd') }}"
+dir = "{{ config_root }}/.."
 run = [
-  "bunx --no-install eslint \"$MISE_PROJECT_ROOT\" --fix --no-warn-ignored",
+  "bunx --no-install eslint --config ../eslint.config.js \"$MISE_PROJECT_ROOT\" --fix --no-warn-ignored",
   "mise run -C \"$MISE_PROJECT_ROOT\" lint",
 ]
 
 [tasks.format]
 description = "Format project files"
 depends = ["install"]
-dir = "{{ exec(command='git rev-parse --show-toplevel 2>/dev/null || pwd') }}"
-run = "bunx --no-install prettier --plugin=prettier-plugin-svelte --write \"$MISE_PROJECT_ROOT\""
+dir = "{{ config_root }}/.."
+run = "bunx --no-install prettier --ignore-path ../.prettierignore --plugin=prettier-plugin-svelte --write \"$MISE_PROJECT_ROOT\""
 
 [tasks."format:check"]
 description = "Check project formatting"
 depends = ["install"]
-dir = "{{ exec(command='git rev-parse --show-toplevel 2>/dev/null || pwd') }}"
-run = "bunx --no-install prettier --plugin=prettier-plugin-svelte --check \"$MISE_PROJECT_ROOT\""
+dir = "{{ config_root }}/.."
+run = "bunx --no-install prettier --ignore-path ../.prettierignore --plugin=prettier-plugin-svelte --check \"$MISE_PROJECT_ROOT\""
 
 [tasks.env-pull]
 description = "Pull external environment configuration"
