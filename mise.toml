@@ -1,13 +1,18 @@
 # The repository root owns registry development and the Bun workspace used by
 # source templates. Generated clients receive only the files declared in
-# premise.yaml under template_registry.workspace_files.
+# premise.yaml under template_registry.workspace_files and workspace_init_files.
 
 monorepo_root = true
+
+[env]
+PREMISE_BIN = { value = "{{ env.PREMISE_BIN | default(value=tools['go:github.com/cloudvoyant/premise'].path ~ '/bin/premise') }}", tools = true }
 
 [monorepo]
 config_roots = ["templates/premise-*", "apps/*", "libs/*"]
 
 [tools]
+go = "1.25.14"
+"go:github.com/cloudvoyant/premise" = "e7f9c6d42da6f1da60e0e57d8aedeff01cdecfd5"
 bun = "1.4.2"
 node = "24"
 svu = "3"
@@ -28,7 +33,7 @@ mise run test
 
 [tasks."template-test"]
 description = "Run every declared template through the Premise contract"
-run = "pm template test"
+run = "{{ env.PREMISE_BIN }} template test"
 
 [tasks.build]
 description = "Validate registry structure"

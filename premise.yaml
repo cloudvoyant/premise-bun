@@ -13,13 +13,14 @@ workspace:
   projects: []
 template_registry:
   workspace_files:
-    - .gitattributes
     - .gitignore
+    - package.json
+  workspace_init_files:
+    - .gitattributes
     - .prettierignore
     - .prettierrc
     - bunfig.toml
     - eslint.config.js
-    - package.json
   templates:
     - name: premise-commander-cli
       kind: app

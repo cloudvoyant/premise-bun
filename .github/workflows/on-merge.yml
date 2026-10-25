@@ -26,14 +26,14 @@ jobs:
           persist-credentials: false
       - name: Plan publication
         id: plan
-        uses: cloudvoyant/premise@v0
+        uses: cloudvoyant/premise@v0.6.0-rc.306
         with:
           command: plan
           flow: on-merge
           release: auto
           install-premise: build
       - name: Run validation
-        uses: cloudvoyant/premise@v0
+        uses: cloudvoyant/premise@v0.6.0-rc.306
         with:
           command: flow
           flow: on-merge
@@ -64,7 +64,7 @@ jobs:
             exit 1
           fi
       - name: Create or reuse release tag
-        uses: cloudvoyant/premise@v0
+        uses: cloudvoyant/premise@v0.6.0-rc.306
         env:
           GH_TOKEN: ${{ github.token }}
         with:
@@ -75,7 +75,7 @@ jobs:
           channel: stable
           version: ${{ needs.verify.outputs.version }}
       - name: Publish npm packages
-        uses: cloudvoyant/premise@v0
+        uses: cloudvoyant/premise@v0.6.0-rc.306
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         with:

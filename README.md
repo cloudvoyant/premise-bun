@@ -61,6 +61,8 @@ The GitHub workflows use the maintained Premise `v0` major tag and run validatio
 
 ## Development
 
+Workspace formatter and linter files are initial defaults. The first Bun project copies missing files to the client root. Later projects preserve client rules and merge dependency changes into `package.json`. The development CLI pin supports `workspace_init_files` until a suitable core release is available.
+
 See the [development guide](docs/development-guide.md) for local validation and publication details. See [architecture](docs/architecture.md) for the registry layout.
 
 ## License
